@@ -8,9 +8,9 @@ Gem::Specification.new do |spec|
   spec.version       = Angles::VERSION
   spec.authors       = ["Gregory H. Halverson"]
   spec.email         = ["gregory.halverson@gmail.com"]
-  spec.summary       = %q{TODO: Write a short summary. Required.}
-  spec.description   = %q{TODO: Write a longer description. Optional.}
-  spec.homepage      = ""
+  spec.summary       = %q{Angle class}
+  spec.description   = %q{Encapsulates angles in Ruby. Easily switch between degrees and radians. Output in human-readable format. Built-in trig functions. Automatically normalize angles.}
+  spec.homepage      = "https://github.com/gregory-halverson/angles"
   spec.license       = "MIT"
 
   spec.files         = `git ls-files -z`.split("\x0")
