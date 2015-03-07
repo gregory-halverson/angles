@@ -3,16 +3,21 @@ require "angles/version"
 require 'ratapprox'
 
 class Angle
+  # make class comparable
+  include Comparable
+
+  # make mode and display attributes mutable
+  attr_reader :angle
+  attr_accessor :mode, :display
+
   # constants
   @@PI = Math::PI
   @@TWO_PI = Math::PI * 2
   @@PI_SYMBOL = "\u03c0"
   @@DEGREE_SYMBOL = "\u00b0"
   @@SECONDS_DECIMAL_PLACES = 2
+  @@ROUND_SECONDS = 10
   @@ROUND_TRIG = 12
-
-  # make mode and display attributes mutable
-  attr_accessor :mode, :display
 
   # initializers
 
@@ -40,39 +45,63 @@ class Angle
 
   # getters
 
-  def angle
-    @angle
-  end
-
   def radians
     self.angle
+  end
+
+  def radians=(radians)
+    self.from_radians radians
   end
 
   def degrees
     Angle.radians_to_degrees(self.radians).to_f
   end
 
+  def degrees=(degrees)
+    self.from_degrees degrees
+  end
+
   def d
     self.degrees.floor
+  end
+
+  def d=(degrees)
+    self.degrees = self.degrees - self.d + degrees
   end
 
   def minutes
     self.degrees * 60
   end
 
+  def minutes=(minutes)
+    self.from_degrees minutes.to_f / 60
+  end
+
   def m
     self.minutes.floor % 60
   end
 
+  def m=(minutes)
+    self.minutes = self.minutes - self.m + minutes
+  end
+
   def seconds
-    self.minutes * 60
+    (self.minutes * 60).round @@ROUND_SECONDS
+  end
+
+  def seconds=(seconds)
+    self.from_degrees seconds.to_f / 3600
   end
 
   def s
-    self.seconds.floor % 60
+    (self.seconds % 60).round @@ROUND_SECONDS
   end
 
-  # normailize a value of degrees to [0, 360)
+  def s=(seconds)
+    self.seconds = self.seconds - self.s + seconds
+  end
+
+  # normalize a value of degrees to [0, 360)
   def self.normalize_degrees(degrees)
     degrees -= 360 while degrees >= 360
     degrees += 360 while degrees < 0
@@ -412,28 +441,26 @@ class Angle
   # operator overloads
 
   def +(other_angle)
-    new_angle = self.clone
-    new_angle.from_radians(Angle.normalize_radians(new_angle.angle + other_angle.angle))
-    new_angle
+    self.clone.from_radians(Angle.normalize_radians(self.radians + other_angle.angle))
   end
 
   def -(other_angle)
-    new_angle = self.clone
-    new_angle.from_radians(Angle.normalize_radians(new_angle.angle - other_angle.angle))
-    new_angle
+    self.clone.from_radians(Angle.normalize_radians(self.radians - other_angle.angle))
   end
 
   def *(number)
-    new_angle = self.clone
-    new_angle.from_radians(Angle.normalize_radians(new_angle.angle * number))
-    new_angle
+    self.clone.from_radians(Angle.normalize_radians(self.radians * number))
   end
 
   def /(number)
-    new_angle = self.clone
-    new_angle.from_radians(Angle.normalize_radians(new_angle.angle / number))
-    new_angle
+    self.clone.from_radians(Angle.normalize_radians(self.radians / number))
   end
+
+  # add comparison operators
+  def <=>(other_angle)
+    self.angle <=> other_angle.angle
+  end
+
 end
 
 def degrees(degrees)
