@@ -11,6 +11,9 @@ class Angle
   @@SECONDS_DECIMAL_PLACES = 2
   @@ROUND_TRIG = 12
 
+  # make mode and display attributes mutable
+  attr_accessor :mode, :display
+
   # initializers
 
   def initialize(angle=0, mode=:degrees, display=:readable)
@@ -35,19 +38,7 @@ class Angle
     self
   end
 
-  # getters and setters
-
-  def mode
-    @mode
-  end
-
-  def display
-    @display
-  end
-
-  def set_display(display)
-    @display = display
-  end
+  # getters
 
   def angle
     @angle
