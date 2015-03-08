@@ -308,7 +308,7 @@ class Angle
   end
 
   def obtuse?
-    d = self.degress
+    d = self.degrees
     d > 90 and d < 180
   end
 
